@@ -12,7 +12,7 @@ require('./index');
 describe('this and the global context', () => {
 
   it('can reference the window or global object', () => {
-    expect(window.color).toBe(/* FILL_ME_IN */);
+    expect(window.color).toBe('red');
   })
 
   it('can be a bit tricky', () => {
@@ -28,7 +28,7 @@ describe('this and the global context', () => {
         };
     }
     var obj = new WhoIsThis();
-    expect(obj.display()).toBe(/* FILL_ME_IN */);
+    expect(obj.display()).toBe(300);
   });
 });
 
@@ -42,12 +42,16 @@ describe('this and method invocation', () => {
   }
 
   it('refers to an object when used inside the invocation of a method', () => {
-    expect(bike.getBrand()).toBe(/* FILL_ME_IN */);
+    expect(bike.getBrand()).toBe('Specialized');
   })
 
   it('can be bound to a specific object', () => {
 
-    var brand = bike.getBrand; // FIX_ME
+    //??I don't understand why this method needs to be bound back to its own object it was created from??
+
+    //Understand now: var brand = function() {return this.brand} <== BUT, when this get's invoked on its own, it thinks 'this' is the global object.
+    //This is why it needs to get BINDED back to itself (only in this case). It could also be bound to other objects or you could leave it alone if you really wanted it bound to the global object
+    var brand = bike.getBrand.bind(bike); // FIX_ME
 
     expect(brand()).toBe('Specialized');
   })
@@ -58,7 +62,8 @@ describe('this and method invocation', () => {
       brand: 'Cannondale'
     }
 
-    var brand = bike.getBrand(anotherBike); // FIX_ME
+    //I understand why this needs to be binded to the 'anotherBike' variable
+    var brand = bike.getBrand.bind(anotherBike); // FIX_ME
 
     expect(brand()).toBe('Cannondale');
   })
